@@ -1,26 +1,26 @@
-pragma solidity ^0.5.1;
+pragma solidity ^0.5.0;
 
 contract FirstERC20Token {
     string  public name = "MyERC20Token";
     string  public symbol = "ERT";
     uint256 public totalAmount;
 
-
     //key value pairs 
     mapping(address => uint256) public balances; // balances of token holders
     mapping(address => mapping(address => uint256)) public allowance; // number of token allowed to transfer from one address to another.
 
-function balanceOf(address tokenOwner) public view  returns (uint256 balance) {
+    function balanceOf(address tokenOwner) public view  returns (uint256 balance) 
+    {
         return balances[tokenOwner];
     }
     
-      constructor  (uint256 _initialAmount) public {
+    constructor  (uint256 _initialAmount) public {
         balances[msg.sender] = _initialAmount;
         totalAmount = _initialAmount;
     }
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        require(balances[msg.sender] >= _value);
+        require(balances[msg.sender] >= _value, "Sorry insufficient funds");
 
         balances[msg.sender] -= _value;
         balances[_to] += _value;
@@ -40,8 +40,9 @@ function balanceOf(address tokenOwner) public view  returns (uint256 balance) {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require(_value <= balances[_from]); // ensure that there's enough amount from sender address
-        require(_value <= allowance[_from][msg.sender]); // ensure that the approved amount is enough
+        // ensure that there's enough amount from sender address
+        require(_value <= balances[_from],""); 
+        require(_value <= allowance[_from][msg.sender],""); // ensure that the approved amount is enough
 
         balances[_from] -= _value;
         balances[_to] += _value;
@@ -58,11 +59,10 @@ function balanceOf(address tokenOwner) public view  returns (uint256 balance) {
         uint256 _value
     );
     
-        event Transfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 _value
+    event Transfer(
+    address indexed _from,
+    address indexed _to,
+    uint256 _value
     );
-
 
 }
